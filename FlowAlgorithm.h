@@ -16,7 +16,7 @@ typedef struct {
   int wall;
 } Node;
 
-static const int WALL = 600;
+static const int WALL = 600; //threshhold, change base on bot
 static int E = 0x0010;
 static int W = 0x0001;
 static int N = 0x0100;
@@ -28,10 +28,13 @@ static const char dir[] = {'N','E','S','W'};
 static int cX = 0;
 static int cY = 0;
 
+//FloodFill Map
 static const int MAP_SIZE = 16;
 static Node mazeMap[16][16];
 static bool once = true;
+int dist[MAP_SIZE][MAP_SIZE];
 
+//Stack
 static int c_stack_size = 0;
 static int n_stack_size = 0;
 static int STACK_CAP = 256;
@@ -39,21 +42,7 @@ static Node node;
 static Node c_stack[256];
 static Node n_stack[256];
 
-int dist[MAP_SIZE][MAP_SIZE];
-int getcX() { return cX;}
-int getcY() { return cY;}
-int getPos() { return pos;}
-
-int getDist() {
-  dist[MAP_SIZE][MAP_SIZE];
-  for(int x=0; x<MAP_SIZE;x++) {
-    for(int y =0; y<MAP_SIZE;y++) {
-      dist[x][y] = mazeMap[x][y].dist;
-    }
-  }
-  return (int)dist;
-}
-
+/*Stack*/
 void push(bool next) {
   if(!next) {
     assert(c_stack_size+1<STACK_CAP);
@@ -87,6 +76,22 @@ int size(bool next) {
     return c_stack_size;
 }
 
+/*FloodFill*/
+int getcX() { return cX;}
+int getcY() { return cY;}
+int getPos() { return pos;}
+
+int getDist() {
+  dist[MAP_SIZE][MAP_SIZE];
+  for(int x=0; x<MAP_SIZE;x++) {
+    for(int y =0; y<MAP_SIZE;y++) {
+      dist[x][y] = mazeMap[x][y].dist;
+    }
+  }
+  return (int)dist;
+}
+
+
 void clear() {
   for(int x=0; x<MAP_SIZE;x++) {
     for(int y =0; y<MAP_SIZE;y++) {
@@ -100,6 +105,7 @@ void clear() {
   }
 }
 
+//OFF
 void FlowAlgorithm(int position, int currX, int currY) {
   pos = position;
   cX = currX;
@@ -291,79 +297,3 @@ void mapMaze(int readData[], int p, int iX, int iY, bool center) {
   n_stack_size = 0;
   once = false;
 }
-  /*
-   * For help
-   
-public void display(bool num) {
-  System.out.print("\t ");
-  for (int x=0; x<MAP_SIZE; x++) {
-    System.out.print(x%10);    
-    System.out.print("     "); //2 orig
-  }
-  System.out.println();
-
-  for (int row = 0; row < MAP_SIZE; row++)
-  {
-    helpTop(row);
-    System.out.print((row) + "\t");
-    for (int col =0; col < MAP_SIZE; col++)
-    {
-        if((mazeMap[row][col].wall & 0x0010) == 0x0010)//if theres a left wall
-          System.out.print("|");
-        else
-          System.out.print(" ");
-        if(cX == row && cY == col){
-          if((mazeMap[row][col].wall&0x1000) == 0x1000)//if theres a bottom wall
-              System.out.print("_"+dir[pos]+dir[pos]+"_");
-          else
-              System.out.print(" "+dir[pos]+dir[pos]+" ");
-        }else if(num){
-          if((mazeMap[row][col].wall&0x1000) == 0x1000){//if theres a bottom wall
-              if(mazeMap[row][col].dist<10)
-                 System.out.print("_" + mazeMap[row][col].dist +"__");
-              else if(mazeMap[row][col].dist<100)
-                 System.out.print("_" + mazeMap[row][col].dist +"_");
-              else
-                 System.out.print("_" + mazeMap[row][col].dist +""); 
-          }
-          else{
-              if(mazeMap[row][col].dist<10)
-                 System.out.print(" " + mazeMap[row][col].dist +"  ");
-              else if(mazeMap[row][col].dist<100)
-                 System.out.print(" " + mazeMap[row][col].dist +" ");
-              else
-                 System.out.print(" " + mazeMap[row][col].dist +""); 
-          }
-        }else{
-          if((mazeMap[row][col].wall&0x1000) == 0x1000)//if theres a bottom wall
-              System.out.print("____");
-          else
-              System.out.print("    ");
-        }
-          
-        if((mazeMap[row][col].wall&0x0001) == 0x0001)//if theres a rt wall
-          System.out.print("|");
-        else
-          System.out.print(" ");
-    }
-    System.out.println();
-  }
-}
-
-private void helpTop(int row)
-{
-   System.out.print("\t");
-   for(int col = 0; col<MAP_SIZE; col++)
-   {
-       if((mazeMap[row][col].wall&0x0100) == 0x0100)//if theres a top wall
-          System.out.print(" ____ ");
-       else
-          System.out.print("      ");//3 orig
-   }
-   System.out.println();
-}
-*/
-
-
-
-
