@@ -1,4 +1,5 @@
 #include "MapMaker.h" //not included in maple
+//#include "FlowAlgorithm.h"
 
 int main (int argc, char *argv[]) {
     char buff[BUFSIZ]={0}; //store commands
