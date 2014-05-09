@@ -1,5 +1,5 @@
 /*
- @author Timothy Kua and Joe Kang
+ @author Timothy Kua
 */
 #ifndef FlOODALGORITHM_HPP
 #define FLOODALGORITHM_HPP
@@ -9,10 +9,11 @@
 #define MAP_SIZE  16
 #define STACK_CAP 256
 #define WALL  600
-#define E 0x0010
-#define W 0x0001
-#define N 0x0100
-#define S 0x1000
+#define N_DIR 'N'
+#define E_DIR 'E'
+#define S_DIR 'S'
+#define W_DIR 'W'
+#define DIR N_DIR, E_DIR, S_DIR, W_DIR
 
 
 struct Node{
@@ -30,12 +31,14 @@ class FloodAlgorithm{
   //stack
      c_stack_size = 0;
      n_stack_size = 0;
+  //FloodAlgorithm
+     clear();  //make a clean map
   }
   
   ~FloodAlgorithm();
   
   //methods for flood_algorithm
-    void mapWall(int x, int y, int readData[], int dir);
+    void mapWall(int x, int y, int readData[], int pos/*dir*/);
     void mapMaze(int readData[], int dir, int iX, int iY, bool center);
     
   //methods for movement
@@ -43,7 +46,8 @@ class FloodAlgorithm{
   private:
   /*var*/
   //floodfill
-    Node mazeMap [MAP_SIZE][MAP_SIZE];
+  Node mazeMap [MAP_SIZE][MAP_SIZE];
+
   //stack
   int c_stack_size;
   int n_stack_size;

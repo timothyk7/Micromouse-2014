@@ -77,6 +77,99 @@ void FloodAlgorithm::clear() {
 }
 
 //public
-void FloodAlgorithm::mapWall(int x, int y, int readData[], int dir)
+/*MapWall - writes the wall configuration into the maze
+  0 - no wall   1 - wall
+*/
+void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
 {
+   char dir[] = {DIR}; //create dir array
+   //wall location
+   int E = 0x0; 
+   int W = 0x0; 
+   int N = 0x0; 
+   int S = 0x0; 
+  //formalize the wall hex to keep the same orientation
+  if(dir[pos] == N_DIR) {
+       E = 0x0001;
+       W = 0x0010;
+       N = 0x0100;
+       S = 0x1000;
+  }
+  else if (dir[pos] == E_DIR) {
+       E = 0x1000;
+       W = 0x0100;
+       N = 0x0001;
+       S = 0x0010;
+   }
+   else if (dir[pos] == S_DIR) {
+       E = 0x0010;
+       W = 0x0001;
+       N = 0x1000;
+       S = 0x0100;
+   }
+   else if (dir[pos] == W_DIR) {
+       E = 0x0100;
+       W = 0x1000;
+       N = 0x0010;
+       S = 0x0001;
+   }
+   else
+       //assert(false);
+    
+  if (readData[0] < WALL) { //checking if wall on left
+  
+    mazeMap[x][y].wall = mazeMap[x][y].wall |W;
+    
+    //putting up wall on the other side
+    if(dir[pos] == N_DIR && coordCheck(y-1)) {
+      mazeMap[x][y-1].wall = mazeMap[x][y-1].wall |E;
+    }
+    else if (dir[pos] == E_DIR && coordCheck(x-1)) {
+      mazeMap[x-1][y].wall = mazeMap[x-1][y].wall |E;
+    }
+    else if(dir[pos] == S_DIR && coordCheck(y+1)) {
+      mazeMap[x][y+1].wall = mazeMap[x][y+1].wall |E;
+    }
+    else if(dir[pos] == W_DIR && coordCheck(x+1)) {
+      mazeMap[x+1][y].wall = mazeMap[x+1][y].wall |E;
+    }
+  }
+
+  if (readData[4] < WALL) {//right
+  
+    mazeMap[x][y].wall = mazeMap[x][y].wall |E;
+    
+    //putting up wall on the other side
+    if(dir[pos] == N_DIR && coordCheck(y+1)) {
+      mazeMap[x][y+1].wall = mazeMap[x][y+1].wall |W;
+    }
+    else if (dir[pos] == E_DIR && coordCheck(x+1)) {
+      mazeMap[x+1][y].wall = mazeMap[x+1][y].wall |W;
+    }
+    else if (dir[pos] == S_DIR && coordCheck(y-1)) {
+      mazeMap[x][y-1].wall = mazeMap[x][y-1].wall |W;
+    }
+    else if (dir[pos] == W_DIR && coordCheck(x-1)) {
+        mazeMap[x-1][y].wall = mazeMap[x-1][y].wall |W;
+    }
+  }
+
+  if ((readData[1] + readData[2] + readData[3])/3 < WALL) {//front
+  
+    mazeMap[x][y].wall = mazeMap[x][y].wall |N;
+    
+    //putting up wall on the other side
+    if (dir[pos] == N_DIR && coordCheck(x-1)) {
+      mazeMap[x-1][y].wall = mazeMap[x-1][y].wall |S;
+    }
+    else if (dir[pos] == E_DIR && coordCheck(y+1)) {
+      mazeMap[x][y+1].wall = mazeMap[x][y+1].wall |S;
+    }
+    else if (dir[pos] == S_DIR && coordCheck(x+1)) {
+      mazeMap[x+1][y].wall = mazeMap[x+1][y].wall |S;
+    }
+    else if (dir[pos] == W_DIR && coordCheck(y-1)) {
+        mazeMap[x][y-1].wall = mazeMap[x][y-1].wall |S;
+    }
+  }
 }
