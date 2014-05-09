@@ -7,6 +7,7 @@
 #include <stack>
 
 #define MAP_SIZE  16
+#define STACK_CAP 256
 #define WALL  600
 
 
@@ -22,7 +23,9 @@ class FloodAlgorithm{
 
   //(de)construtors
   explicit FloodAlgorithm() {
-
+  //stack
+     c_stack_size = 0;
+     n_stack_size = 0;
   }
   
   ~FloodAlgorithm();
@@ -38,6 +41,12 @@ class FloodAlgorithm{
   //floodfill
     Node map [MAP_SIZE][MAP_SIZE];
   //stack
+  int c_stack_size;
+  int n_stack_size;
+
+  Node node;
+  Node c_stack[STACK_CAP];
+  Node n_stack[STACK_CAP];
     
     
   /*Method*/
@@ -45,6 +54,9 @@ class FloodAlgorithm{
     void clear(); //reset whole maze
     void clearDist();
   //stack methods
+    void push (bool next);
+    void pop (bool next);
+    int size (bool next);
 
 };
 
