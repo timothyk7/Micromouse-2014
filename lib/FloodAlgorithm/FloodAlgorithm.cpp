@@ -3,6 +3,12 @@
 */
 #include "FloodAlgorithm.h"
 
+//destructor
+ FloodAlgorithm::~FloodAlgorithm()
+ { 
+    
+ }
+
 /*Stack Methods*/
 void FloodAlgorithm::push(bool next)
 {
@@ -43,4 +49,34 @@ int FloodAlgorithm::size(bool next)
     return n_stack_size;
   else
     return c_stack_size;
+}
+
+/*FloodAlgorithm - Basic*/
+//private 
+bool FloodAlgorithm::coordCheck(int coord) {
+  return ((coord >= 0) && (coord < MAP_SIZE));
+}
+
+void FloodAlgorithm::clearDist() {
+  for(int x= 0; x < MAP_SIZE; x++) {
+    for(int y = 0; y < MAP_SIZE;y++) {
+      mazeMap[x][y].dist = 257;
+    }
+  }
+}
+
+void FloodAlgorithm::clear() {
+  for(int x= 0; x < MAP_SIZE;x++) {
+    for(int y = 0; y < MAP_SIZE;y++) {
+      mazeMap[x][y].x = x;
+      mazeMap[x][y].y = y;
+      mazeMap[x][y].wall = 0;
+      mazeMap[x][y].dist = 257;
+    }
+  }
+}
+
+//public
+void FloodAlgorithm::mapWall(int x, int y, int readData[], int dir)
+{
 }
