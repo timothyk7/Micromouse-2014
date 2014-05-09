@@ -1,7 +1,7 @@
 #ifndef MAPMAKER_HPP
 #define MAPMAKER_HPP
 
-#define MAP_SIZE  16
+#define MAX_SIZE  16
 #define FALSE 0
 #define TRUE 1
 #define TOKEN_SEP " \t\n"
@@ -25,7 +25,7 @@ struct info{
 typedef struct info Info;
       
 //variables
-Info mazeMap [MAP_SIZE][MAP_SIZE]; //map of maze from file
+Info mazeMap [MAX_SIZE][MAX_SIZE]; //map of maze from file
 FILE *inFile = 0; //file of maze
 char buff[BUFSIZ]; //store string from file
 char *endPtr; //for errors
@@ -35,7 +35,7 @@ void helpTop(int row)
 {
     (void)printf("\t");
     int col;
-    for(col = 0; col<MAP_SIZE; col++)
+    for(col = 0; col<MAX_SIZE; col++)
     {
        if(((mazeMap[row][col].wall>>2)&0x0001) == 0x0001)//if theres a top wall
                 (void)printf(" ____ ");
@@ -101,11 +101,11 @@ Info getMapInfo(int x, int y)
           4 current y location
           5 direction
  */
-void displayMaze(int num, int number[MAP_SIZE][MAP_SIZE], int cX, int cY, char dir)
+void displayMaze(int num, int number[MAX_SIZE][MAX_SIZE], int cX, int cY, char dir)
       {
         (void)printf("\t ");
         int x = 0;
-        for (x=0; x<MAP_SIZE; x++)
+        for (x=0; x<MAX_SIZE; x++)
         {
             (void)printf("%d",x%10);    
             (void)printf("     "); //2 orig
@@ -114,12 +114,12 @@ void displayMaze(int num, int number[MAP_SIZE][MAP_SIZE], int cX, int cY, char d
         
         
         int row = 0;
-        for (row = 0; row < MAP_SIZE; row++)
+        for (row = 0; row < MAX_SIZE; row++)
         {
           helpTop(row);
           (void)printf("%d\t",row);
           int col = 0;
-          for (col =0; col < MAP_SIZE; col++)
+          for (col =0; col < MAX_SIZE; col++)
           {
               if(((mazeMap[row][col].wall>>1) & 0x0001) == 0x0001)//if theres a left wall
                 (void)printf("|");
@@ -173,11 +173,11 @@ void displayMaze(int num, int number[MAP_SIZE][MAP_SIZE], int cX, int cY, char d
           5 current y location
           6 direction
  */
-void displayBotMaze(int num, int number[MAP_SIZE][MAP_SIZE], Info map[MAP_SIZE][MAP_SIZE], int cX, int cY, char dir)
+void displayBotMaze(int num, int number[MAX_SIZE][MAX_SIZE], Info map[MAX_SIZE][MAX_SIZE], int cX, int cY, char dir)
       {
         (void)printf("\t ");
         int x = 0;
-        for (x=0; x<MAP_SIZE; x++)
+        for (x=0; x<MAX_SIZE; x++)
         {
             (void)printf("%d",x%10);    
             (void)printf("     "); //2 orig
@@ -186,12 +186,12 @@ void displayBotMaze(int num, int number[MAP_SIZE][MAP_SIZE], Info map[MAP_SIZE][
         
         
         int row = 0;
-        for (row = 0; row < MAP_SIZE; row++)
+        for (row = 0; row < MAX_SIZE; row++)
         {
           helpTop(row);
           (void)printf("%d\t",row);
           int col = 0;
-          for (col =0; col < MAP_SIZE; col++)
+          for (col =0; col < MAX_SIZE; col++)
           {
               if(((mazeMap[row][col].wall>>1) & 0x0001) == 0x0001)//if theres a left wall
                 (void)printf("|");
