@@ -1,8 +1,8 @@
 /*
  @author Timothy Kua
 */
-#ifndef FlOODALGORITHM_HPP
-#define FLOODALGORITHM_HPP
+#ifndef FLOODALGORITHM_H
+#define FLOODALGORITHM_H
 
 #include <stack>
 
@@ -51,6 +51,8 @@ class FloodAlgorithm{
     
   //methods for movement
     int movement(int x, int y, int dir, int readData[]);
+    int getDist(int x, int y); //DEBUGGING
+    int getWall(int x, int y); //DEBUGGING
     
   private:
   /*var*/

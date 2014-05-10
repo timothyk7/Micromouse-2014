@@ -1,5 +1,5 @@
-#ifndef MAPMAKER_HPP
-#define MAPMAKER_HPP
+#ifndef MAPMAKER_H
+#define MAPMAKER_H
 
 #define MAX_SIZE  16
 #define FALSE 0
@@ -26,17 +26,19 @@ typedef struct info Info;
 
 class MapMaker
 {
-public:
+public:    
+
    Info getMapInfo(int x, int y);
    void initialize(const char *maze);
    void displayMaze(int num, int number[MAX_SIZE][MAX_SIZE], int cX, int cY, char dir);
-   void displayBotMaze(int num, int number[MAX_SIZE][MAX_SIZE], Info map[MAX_SIZE][MAX_SIZE], int cX, int cY, char dir);
+   void displayBotMaze(int num, int number[MAX_SIZE][MAX_SIZE], int map[MAX_SIZE][MAX_SIZE], int cX, int cY, char dir);
 
 private:         
 //variables
    Info mazeMap [MAX_SIZE][MAX_SIZE]; //map of maze from file
 
    void helpTop(int row);
+   void helpTopBot(int row, int wall[MAX_SIZE][MAX_SIZE]);
 };
       
 

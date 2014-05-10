@@ -3,6 +3,17 @@
 */
 #include "FloodAlgorithm.h"
 
+/*DEBUGGING*/
+int FloodAlgorithm::getDist(int x, int y)
+{
+    return mazeMap[x][y].dist;
+}
+
+int FloodAlgorithm::getWall(int x, int y)
+{
+    return mazeMap[x][y].wall;
+}
+
 /*Stack Methods*/
 void FloodAlgorithm::push(bool next)
 {
@@ -212,7 +223,6 @@ void FloodAlgorithm::mapMaze
 
   do {
     n_stack_size = 0;
-    n_stack = {};
     
     while (size(false) >0) {
       pop(false);
