@@ -307,6 +307,24 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
 {
     mapMaze(readData,pos,x,y,center);
     
+   char dir[] = {DIR}; //create dir array
+   //wall location
+   int S = 0x0; 
+  //formalize the wall hex to keep the same orientation
+  if(dir[pos] == N_DIR) {
+       S = 0x8; //1000;
+  }
+  else if (dir[pos] == E_DIR) {
+       S = 0x2; //0010;
+   }
+   else if (dir[pos] == S_DIR) {
+       S = 0x4; //0100;
+   }
+   else if (dir[pos] == W_DIR) {
+       S = 0x1; //0001;
+   }
+   else{}
+    
     //if suroundded by walls
     if (isWall(readData,0) && isWall(readData,1) && isWall(readData,2)){
       return 3;
@@ -388,7 +406,6 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
     }
 
     //tell where bot to go
-    char dir[] = {DIR}; //create dir array
     for(int i=0; i<DIR_SIZE;i++)
     {
       if(dir[pos]== N_DIR)
@@ -404,6 +421,9 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
         else if(coordCheck(y-1) && !isWall(readData,1)
         && values[i].x == x && values[i].y == y-1){        //left
           return 1;
+        }else if(((mazeMap[x][y].wall & S) == 0) && coordCheck(x+1) 
+        && values[i].x == x+1 && values[i].y == y){         //turnaround
+          return 3;
         }
       }
       else if (dir[pos] == S_DIR){
@@ -418,6 +438,9 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
         else if(coordCheck(y+1) && !isWall(readData,1) 
         && values[i].x == x && values[i].y == y+1){        //left
           return 1;
+        }else if( ((mazeMap[x][y].wall & S) == 0) && coordCheck(x-1) 
+        && values[i].x == x-1 && values[i].y == y){         //turnaround
+          return 3;
         }
       }
       else if(dir[pos] == E_DIR){
@@ -432,6 +455,9 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
         else if(coordCheck(x-1) && !isWall(readData,1) 
         && values[i].x == x-1 && values[i].y == y){        //left
           return 1;
+        }else if(((mazeMap[x][y].wall & S) == 0) && coordCheck(y-1) 
+        && values[i].x == x && values[i].y == y-1){         //turnaround
+          return 3;
         }
       }
       else if (dir[pos] == W_DIR){
@@ -446,6 +472,9 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
         else if(coordCheck(x+1) && !isWall(readData,1)
         && values[i].x == x+1 && values[i].y == y){        //left
           return 1;
+        }else if(((mazeMap[x][y].wall & S) == 0) && coordCheck(y+1) 
+        && values[i].x == x && values[i].y == y+1){         //turnaround
+          return 3;
         }
       }
     }
