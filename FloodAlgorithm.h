@@ -36,12 +36,9 @@ class FloodAlgorithm{
   }
   
   ~FloodAlgorithm();
-  
-  //methods for flood_algorithm
-    void mapWall(int x, int y, int readData[], int pos/*dir*/);
-    void mapMaze(int readData[], int dir, int iX, int iY, bool center);
     
   //methods for movement
+    int movement(int x, int y, int dir, int readData[]);
     
   private:
   /*var*/
@@ -62,6 +59,8 @@ class FloodAlgorithm{
     void clear(); //reset whole maze
     void clearDist();
     bool coordCheck(int coord); //check if x or y in bounds
+    void mapWall(int x, int y, int readData[], int pos/*dir*/);
+    void mapMaze(int readData[], int dir, int cX, int cY, bool center);
   //stack methods
     void push (bool next);
     void pop (bool next);

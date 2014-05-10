@@ -84,7 +84,6 @@ void FloodAlgorithm::clear() {
   }
 }
 
-/*Public***********************************************************************/
 /*MapWall - writes the wall configuration into the maze
   0 - no wall   1 - wall
 */
@@ -264,4 +263,9 @@ void FloodAlgorithm::mapMaze
     c_stack_size = n_stack_size;
   } while (size(true) > 0);
   n_stack_size = 0;
+}
+/*Public***********************************************************************/
+int FloodAlgorithm::movement(int x, int y, int dir, int readData[])
+{
+    return 0;
 }
