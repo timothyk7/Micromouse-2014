@@ -54,9 +54,13 @@ void forward()
   }
 }
 
+/*
+   small number = no wall there
+   large number = wall
+*/
 void sensor(MapMaker map)
 {
-    int oR=0,oL=0,oF=0; // wall in dir facing
+    unsigned int oR=0,oL=0,oF=0; // wall in dir facing
     if(dir[pos] == 'N'){
         oL=0x0010;
         oR=0x0001;
@@ -74,32 +78,36 @@ void sensor(MapMaker map)
         oR=0x0100;
         oF=0x0010;
     }
+    printf("wall %x ", map.getMapInfo(cX,cY).wall);
     if((map.getMapInfo(cX,cY).wall&oL) == oL) //left
+    {
+    printf("l %x ",oL);
+        readData[1] = 1200;
+        readData[2] = 1200;
+    }
+    else
     {
         readData[1] = 400;
         readData[2] = 400;
     }
-    else
-    {
-        readData[1] = 1200;
-        readData[2] = 1200;
-    }
     if((map.getMapInfo(cX,cY).wall&oR) == oR) //right
+    {
+    printf("r %d ",oR);
+        readData[3] = 1200;
+        readData[4] = 1200;
+    }
+    else
     {
         readData[3] = 400;
         readData[4] = 400;
     }
-    else
-    {
-        readData[3] = 1200;
-        readData[4] = 1200;
-    }
     if((map.getMapInfo(cX,cY).wall&oF) == oF){ //front
-        readData[0] = 400;
-        readData[5] = 400;
-    }else{
+    printf("f %d ",oF);
         readData[0] = 1200;
         readData[5] = 1200;
+    }else{
+        readData[0] = 400;
+        readData[5] = 400;
     }
 }
 

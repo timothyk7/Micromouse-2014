@@ -89,10 +89,38 @@ void FloodAlgorithm::clear() {
   }
 }
 
+/* Check if there is wall based on data
+   CAN CHANGE
+   
+   return true if wall there
+   return false if no wall nearby
+*/
+bool FloodAlgorithm::isWall(int readData[DIR_SIZE], int type)
+{
+     switch (type)
+     {
+            case 0: //front
+               if((readData[0] + readData[5])/2 > WALL)
+                  return true;
+               break;
+            case 1: //left
+               if((readData[1] + readData[2])/2 > WALL)
+                  return true;
+               break;
+            case 2: //right
+               if((readData[3] + readData[4])/2 > WALL)
+                  return true;
+               break;
+            default:
+               return false;
+     }
+     return false;
+}
+
 /*MapWall - writes the wall configuration into the maze
   0 - no wall   1 - wall
 */
-void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
+void FloodAlgorithm::mapWall(int x, int y, int readData[DIR_SIZE], int pos)
 {
    char dir[] = {DIR}; //create dir array
    //wall location
@@ -128,7 +156,7 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
    else
        //assert(false);
     
-  if ((readData[1] + readData[2])/2 < WALL) { //check wall on left (CAN CHANGE)
+  if (isWall(readData, 1)) { //check if wall on left
   
     mazeMap[x][y].wall = mazeMap[x][y].wall |W;
     
@@ -147,7 +175,7 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
     }
   }
 
-  if ((readData[3] + readData[4])/2 < WALL) {//right (CAN CHANGE)
+  if (isWall(readData,2)) {//right
   
     mazeMap[x][y].wall = mazeMap[x][y].wall |E;
     
@@ -166,7 +194,7 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
     }
   }
 
-  if ((readData[0] + readData[5])/2 < WALL) {//front (CAN CHANGE)
+  if (isWall(readData,0)) {//front
   
     mazeMap[x][y].wall = mazeMap[x][y].wall |N;
     
@@ -198,7 +226,7 @@ void FloodAlgorithm::mapMaze
   //map the maze
   //assert(size(true) == 0 && size(false) == 0);
   mapWall(cX,cY,readData,dir);
-    
+  
   //flood the maze
   int x = 0; // store node value
   int y = 0;
@@ -281,7 +309,7 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
     mapMaze(readData,pos,x,y,center);
     
     //if facing a wall
-    if (readData[0] > WALL && readData[5] > WALL){ //(CAN CHANGE)
+    if (isWall(readData,0)){
       return 3;
     }
     
@@ -347,63 +375,63 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
       values[position] =  key;
     }
 /**********************/
-    //tell where bot to go  (CAUTIOUS OF SENSOR READINGS)
+    //tell where bot to go
     char dir[] = {DIR}; //create dir array
     for(int i=0; i<DIR_SIZE;i++)
     {
       if(dir[pos]== N_DIR)
       {
-        if(coordCheck(x-1) && (readData[0] + readData[5])/2 < WALL 
+        if(coordCheck(x-1) && !isWall(readData,0)
         && values[i].x == x-1 && values[i].y == y){     //up
           return 0;
         }
-        else if(coordCheck(y+1) && (readData[3] + readData[4])/2 < WALL 
+        else if(coordCheck(y+1) && !isWall(readData,2)
         && values[i].x == x && values[i].y == y+1){        //rt
           return 2;
         }
-        else if(coordCheck(y-1) && (readData[1] + readData[2])/2< WALL
+        else if(coordCheck(y-1) && !isWall(readData,1)
         && values[i].x == x && values[i].y == y-1){        //left
           return 1;
         }
       }
       else if (dir[pos] == S_DIR){
-        if(coordCheck(x+1) && ((readData[1] + readData[2])/2 + readData[5])/2 < WALL 
+        if(coordCheck(x+1) && !isWall(readData,0)
         && values[i].x == x+1 && values[i].y == y){     //up
           return 0;
         }
-        else if(coordCheck(y-1) && (readData[3] + readData[4])/2 < WALL 
+        else if(coordCheck(y-1) && !isWall(readData,2) 
         && values[i].x == x && values[i].y == y-1){        //rt
           return 2;
         }
-        else if(coordCheck(y+1) && (readData[1] + readData[2])/2 < WALL 
+        else if(coordCheck(y+1) && !isWall(readData,1) 
         && values[i].x == x && values[i].y == y+1){        //left
           return 1;
         }
       }
       else if(dir[pos] == E_DIR){
-        if(coordCheck(y+1) && ((readData[1] + readData[2])/2 + readData[5])/2 < WALL 
+        if(coordCheck(y+1) && !isWall(readData,0) 
         && values[i].x == x && values[i].y == y+1){     //up
           return 0;
         }
-        else if(coordCheck(x+1) && (readData[3] + readData[4])/2 < WALL 
+        else if(coordCheck(x+1) && !isWall(readData,2)
         && values[i].x == x+1 && values[i].y == y){        //rt
           return 2;
         }
-        else if(coordCheck(x-1) && (readData[1] + readData[2])/2< WALL 
+        else if(coordCheck(x-1) && !isWall(readData,1) 
         && values[i].x == x-1 && values[i].y == y){        //left
           return 1;
         }
       }
       else if (dir[pos] == W_DIR){
-        if(coordCheck(y-1) && ((readData[1] + readData[2])/2 + readData[5])/2 < WALL 
+        if(coordCheck(y-1) && !isWall(readData,0) 
         && values[i].x == x && values[i].y == y-1){     //up
           return 0;
         }
-        else if(coordCheck(x-1) && (readData[3] + readData[4])/2 < WALL 
+        else if(coordCheck(x-1) && !isWall(readData,2)
         && values[i].x == x-1 && values[i].y == y){        //rt
           return 2;
         }
-        else if(coordCheck(x+1) && (readData[1] + readData[2])/2 < WALL
+        else if(coordCheck(x+1) && !isWall(readData,1)
         && values[i].x == x+1 && values[i].y == y){        //left
           return 1;
         }
