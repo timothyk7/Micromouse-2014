@@ -62,7 +62,7 @@ class FloodAlgorithm{
     void clear(); //reset whole maze
     void clearDist();
     bool coordCheck(int coord); //check if x or y in bounds
-    void mapWall(int x, int y, int readData[], int pos/*dir*/);
+    void mapWall(int x, int y, int readData[], int dir);
     void mapMaze(int readData[], int dir, int cX, int cY, bool center);
   //stack methods
     void push (bool next);

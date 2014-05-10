@@ -123,7 +123,7 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
    else
        //assert(false);
     
-  if ((readData[1] + readData[2])/2 < WALL) { //check wall on left? (CAN CHANGE)
+  if ((readData[1] + readData[2])/2 < WALL) { //check wall on left (CAN CHANGE)
   
     mazeMap[x][y].wall = mazeMap[x][y].wall |W;
     
@@ -272,20 +272,16 @@ void FloodAlgorithm::mapMaze
   3  -> turnaround
   -1 -> error
 */
-int FloodAlgorithm::movement(int x, int y, int dir, int readData[])
+int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
 {
-    if (x == MAP_SIZE/2-1 && y == MAP_SIZE/2-1 ||
-        x == MAP_SIZE/2-1 && y == MAP_SIZE/2 ||
-        x == MAP_SIZE/2 && y == MAP_SIZE/2-1 ||
-        x == MAP_SIZE/2 && y == MAP_SIZE/2 )
-    {
-        center = true;
-    }else {center = false;}
-    mapMaze(readData,dir,x,y,center);
-    /********/
+    mapMaze(readData,pos,x,y,center);
+    
+    //if facing a wall
     if (readData[0] > WALL && readData[5] > WALL){ //(CAN CHANGE)
       return 3;
     }
+    
+    //determine valid locations to move
     Node values[4];
     //up
     if(coordCheck(x-1))
@@ -331,7 +327,8 @@ int FloodAlgorithm::movement(int x, int y, int dir, int readData[])
       values[3].y = 0;
       values[3].dist = 256;
     }
-
+    
+    //sort best location to go
     for (int outer = 1; outer < DIR_SIZE ; outer++)
     {
       int position = outer;
@@ -345,126 +342,83 @@ int FloodAlgorithm::movement(int x, int y, int dir, int readData[])
       }
       values[position] =  key;
     }
-/*
+/**********************/
+    //tell where bot to go  (CAUTIOUS OF SENSOR READINGS)
+    char dir[] = {DIR}; //create dir array
     for(int i=0; i<DIR_SIZE;i++)
     {
-      if(dir[pos]== 'N')
+      if(dir[pos]== N_DIR)
       {
-        if(coordCheck(cX-1) && readData[2] < wallDist && values[i].x == cX-1 && values[i].y == cY){     //up
-          move(1,11);
-          updateLocation();
-          delay(d);
-          //delay(3000);
-          break;
+        if(coordCheck(x-1) && (readData[0] + readData[5])/2 < WALL 
+        && values[i].x == x-1 && values[i].y == y){     //up
+          return 0;
         }
-        else if(coordCheck(cY+1) && readData[4] < wallDist && values[i].x == cX && values[i].y == cY+1){        //rt
-          turn(90);
-          updateDir(90);
-          updateLocation();
-          delay(d);
-          //delay(4000);
-          break;
+        else if(coordCheck(y+1) && (readData[3] + readData[4])/2 < WALL 
+        && values[i].x == x && values[i].y == y+1){        //rt
+          return 2;
         }
-        else if(coordCheck(cY-1) && readData[0]< wallDist&& values[i].x == cX && values[i].y == cY-1){        //left
-          turn(-90);
-          updateDir(-90);
-          updateLocation();
-          delay(d);
-          //delay(4000);
-          break;
+        else if(coordCheck(y-1) && (readData[1] + readData[2])/2< WALL
+        && values[i].x == x && values[i].y == y-1){        //left
+          return 1;
         }
       }
-      else if (dir[pos] == 'S'){
-        if(coordCheck(cX+1) && readData[2] < wallDist && values[i].x == cX+1 && values[i].y == cY){     //up
-          move(1,11);
-          updateLocation();
-          delay(d);
-          //delay(3000);
-          break;
+      else if (dir[pos] == S_DIR){
+        if(coordCheck(x+1) && ((readData[1] + readData[2])/2 + readData[5])/2 < WALL 
+        && values[i].x == x+1 && values[i].y == y){     //up
+          return 0;
         }
-        else if(coordCheck(cY-1) && readData[4] < wallDist && values[i].x == cX && values[i].y == cY-1){        //rt
-          turn(90);
-          updateDir(90);
-          updateLocation();
-          delay(d);
-          //delay(4000);
-          break;
+        else if(coordCheck(y-1) && (readData[3] + readData[4])/2 < WALL 
+        && values[i].x == x && values[i].y == y-1){        //rt
+          return 2;
         }
-        else if(coordCheck(cY+1) && readData[0] < wallDist && values[i].x == cX && values[i].y == cY+1){        //left
-          turn(-90);
-          updateDir(-90);
-          updateLocation();
-          delay(d);
-          //delay(4000);
-          break;
+        else if(coordCheck(y+1) && (readData[1] + readData[2])/2 < WALL 
+        && values[i].x == x && values[i].y == y+1){        //left
+          return 1;
         }
       }
-      else if(dir[pos] == 'E'){
-        if(coordCheck(cY+1) && readData[2] < wallDist && values[i].x == cX && values[i].y == cY+1){     //up
-          move(1,11);
-          updateLocation();
-          delay(d);
-          //delay(3000);
-          break;
+      else if(dir[pos] == E_DIR){
+        if(coordCheck(y+1) && ((readData[1] + readData[2])/2 + readData[5])/2 < WALL 
+        && values[i].x == x && values[i].y == y+1){     //up
+          return 0;
         }
-        else if(coordCheck(cX+1) && readData[4] < wallDist && values[i].x == cX+1 && values[i].y == cY){        //rt
-          turn(90);
-          updateDir(90);
-          updateLocation();
-          delay(d);
-          //delay(4000);
-          break;
+        else if(coordCheck(x+1) && (readData[3] + readData[4])/2 < WALL 
+        && values[i].x == x+1 && values[i].y == y){        //rt
+          return 2;
         }
-        else if(coordCheck(cX-1) && readData[0]< wallDist && values[i].x == cX-1 && values[i].y == cY){        //left
-          turn(-90);
-          updateDir(-90);
-          updateLocation();
-          delay(d);
-          //delay(4000);
-          break;
+        else if(coordCheck(x-1) && (readData[1] + readData[2])/2< WALL 
+        && values[i].x == x-1 && values[i].y == y){        //left
+          return 1;
         }
       }
-      else if (dir[pos] == 'W'){
-        if(coordCheck(cY-1) && readData[2] < wallDist && values[i].x == cX && values[i].y == cY-1){     //up
-          move(1,11);
-          updateLocation();
-          delay(d);
-          //delay(3000);
-          break;
+      else if (dir[pos] == W_DIR){
+        if(coordCheck(y-1) && ((readData[1] + readData[2])/2 + readData[5])/2 < WALL 
+        && values[i].x == x && values[i].y == y-1){     //up
+          return 0;
         }
-        else if(coordCheck(cX-1) && readData[4] < wallDist && values[i].x == cX-1 && values[i].y == cY){        //rt
-          turn(90);
-          updateDir(90);
-          updateLocation();
-          delay(d);
-          //delay(4000);
-          break;
+        else if(coordCheck(x-1) && (readData[3] + readData[4])/2 < WALL 
+        && values[i].x == x-1 && values[i].y == y){        //rt
+          return 2;
         }
-        else if(coordCheck(cX+1) && readData[0] < wallDist&& values[i].x == cX+1 && values[i].y == cY){        //left
-          turn(-90);
-          updateDir(-90);
-          updateLocation();
-          delay(d);
-          //delay(4000);
-          break;
+        else if(coordCheck(x+1) && (readData[1] + readData[2])/2 < WALL
+        && values[i].x == x+1 && values[i].y == y){        //left
+          return 1;
         }
       }
     }
-    delay(10);   
+    
+    //check which part of algorithm to run  
     if(!center)
     {
-      mapMaze(readData,pos,iX,iY,center);
-      if((cX==7 && cY==7) || (cX==7 && cY==8) || (cX==8 && cY==7) || (cX==8 && cY==8)){
+      mapMaze(readData,pos,x,y,center);
+      if((x==7 && y==7) || (x==7 && y==8) || (x==8 && y==7) || (x==8 && y==8)){
         center = !center;
-        delay(5000);
       }
     }
     else{
-      mapMaze(readData,pos,iX,iY,center);
-      if(cX == iX && cY == iY){
+      mapMaze(readData,pos,x,y,center);
+      if(x == 0 && y == 15){
         center = !center;
-        delay(5000);
       }
-    }*/
+    }
     return -1;
 }
