@@ -3,12 +3,6 @@
 */
 #include "FloodAlgorithm.h"
 
-//destructor
- FloodAlgorithm::~FloodAlgorithm()
- { 
-    
- }
-
 /*Stack Methods*/
 void FloodAlgorithm::push(bool next)
 {
@@ -74,12 +68,12 @@ void FloodAlgorithm::clearDist() {
 }
 
 void FloodAlgorithm::clear() {
-  for(int x= 0; x < MAP_SIZE;x++) {
-    for(int y = 0; y < MAP_SIZE;y++) {
-      mazeMap[x][y].x = x;
-      mazeMap[x][y].y = y;
-      mazeMap[x][y].wall = 0;
-      mazeMap[x][y].dist = 257;
+  for(int mx= 0; mx < MAP_SIZE;mx++) {
+    for(int my = 0; my < MAP_SIZE;my++) {
+      mazeMap[mx][my].x = mx;
+      mazeMap[mx][my].y = my;
+      mazeMap[mx][my].wall = 0;
+      mazeMap[mx][my].dist = 257;
     }
   }
 }

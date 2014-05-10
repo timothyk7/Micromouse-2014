@@ -53,6 +53,9 @@ void forward()
 }
 
 int main (int argc, char *argv[]) {
+    //Testing
+    FloodAlgorithm flow;
+    
     char buff[BUFSIZ]={0}; //store commands
     
     //used to store if the program should read from file or the user
@@ -61,7 +64,7 @@ int main (int argc, char *argv[]) {
     int prompt; //if should prompt the user or not
     prompt = TRUE; //should promt user
     
-    initialize("maze3.txt");
+    //initialize("maze3.txt");
     int dist [MAP_SIZE][MAP_SIZE]={0}; /*debug*/
     
     char *str;
@@ -70,7 +73,7 @@ int main (int argc, char *argv[]) {
        str = strtok(buff, TOKEN_SEP);
        if(strcmp(str, "exit") == 0)
           break;      
-       displayMaze(TRUE, dist,0,0,'N');
+       //displayMaze(TRUE, dist,0,0,'N');
     }
     return 0;
 }

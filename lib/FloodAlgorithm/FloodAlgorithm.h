@@ -34,10 +34,20 @@ class FloodAlgorithm{
      n_stack_size = 0;
   //FloodAlgorithm
      center = false;
-     clear();  //make a clean map
+  //clear
+     for(int mx= 0; mx < MAP_SIZE;mx++) {
+        for(int my = 0; my < MAP_SIZE;my++) {
+           mazeMap[mx][my].x = mx;
+           mazeMap[mx][my].y = my;
+           mazeMap[mx][my].wall = 0;
+           mazeMap[mx][my].dist = 257;
+        }
+     }
   }
   
-  ~FloodAlgorithm();
+  ~FloodAlgorithm()
+  {
+  }
     
   //methods for movement
     int movement(int x, int y, int dir, int readData[]);
