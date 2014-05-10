@@ -129,6 +129,41 @@ int main (int argc, char *argv[]) {
     int dist [MAP_SIZE][MAP_SIZE]={0}; /*debug*/
     int wall [MAP_SIZE][MAP_SIZE]={0}; /*debug*/
 
+    /* // Done to speed simulator*/
+    for(int x =0; x<200; x++)
+    {
+       sensor(map);
+       switch (flow.movement(cX,cY,pos,readData))
+       {
+              case 0:
+                   forward();
+              break;
+              case 1:
+                   turn(-90);
+              break;
+              case 2:
+                   turn(90);
+              break;
+              case 3:
+                   turn(180);
+              break;
+              default:
+                 printf("ERROR\n");
+                 return -1;
+       }
+        for(int mx= 0; mx < MAP_SIZE;mx++) {
+            for(int my = 0; my < MAP_SIZE;my++) {
+              dist[mx][my] = flow.getDist(mx,my);
+            }
+        }
+        for(int mx= 0; mx < MAP_SIZE;mx++) {
+            for(int my = 0; my < MAP_SIZE;my++) {
+              wall[mx][my] = flow.getWall(mx,my);
+            }
+        }
+    }
+    
+    
     char *str;
     for(DISPLAY_PROMPT; fgets(buff,BUFSIZ, pFile) !=NULL;DISPLAY_PROMPT)
     {

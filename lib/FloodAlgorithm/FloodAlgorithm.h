@@ -15,7 +15,6 @@
 #define S_DIR 'S'
 #define W_DIR 'W'
 #define DIR N_DIR, E_DIR, S_DIR, W_DIR
-#define SENSOR_NUMBER 6 
 
 
 struct Node{
@@ -74,7 +73,7 @@ class FloodAlgorithm{
   //flood_algorithm 
     void clear(); //reset whole maze
     void clearDist();
-    bool isWall(int readData[], int type);
+    bool isWall(int readData[], int type); //SUBJECT TO CHANGE BASED ON BOT
     bool coordCheck(int coord); //check if x or y in bounds
     void mapWall(int x, int y, int readData[], int dir);
     void mapMaze(int readData[], int dir, int cX, int cY, bool center);

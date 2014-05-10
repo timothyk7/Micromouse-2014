@@ -306,8 +306,8 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
 {
     mapMaze(readData,pos,x,y,center);
     
-    //if facing a wall
-    if (isWall(readData,0)){
+    //if suroundded by walls
+    if (isWall(readData,0) && isWall(readData,1) && isWall(readData,2)){
       return 3;
     }
     
