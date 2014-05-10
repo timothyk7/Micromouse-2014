@@ -9,6 +9,7 @@
 #define MAP_SIZE  16
 #define STACK_CAP 256
 #define WALL  600
+#define DIR_SIZE 4
 #define N_DIR 'N'
 #define E_DIR 'E'
 #define S_DIR 'S'
@@ -32,6 +33,7 @@ class FloodAlgorithm{
      c_stack_size = 0;
      n_stack_size = 0;
   //FloodAlgorithm
+     center = false;
      clear();  //make a clean map
   }
   
@@ -44,6 +46,7 @@ class FloodAlgorithm{
   /*var*/
   //floodfill
   Node mazeMap [MAP_SIZE][MAP_SIZE];
+  bool center;
 
   //stack
   int c_stack_size;

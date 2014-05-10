@@ -123,7 +123,7 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
    else
        //assert(false);
     
-  if (readData[0] < WALL) { //checking if wall on left
+  if ((readData[1] + readData[2])/2 < WALL) { //check wall on left? (CAN CHANGE)
   
     mazeMap[x][y].wall = mazeMap[x][y].wall |W;
     
@@ -142,7 +142,7 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
     }
   }
 
-  if (readData[4] < WALL) {//right
+  if ((readData[3] + readData[4])/2 < WALL) {//right (CAN CHANGE)
   
     mazeMap[x][y].wall = mazeMap[x][y].wall |E;
     
@@ -161,7 +161,7 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
     }
   }
 
-  if ((readData[1] + readData[2] + readData[3])/3 < WALL) {//front
+  if ((readData[0] + readData[5])/2 < WALL) {//front (CAN CHANGE)
   
     mazeMap[x][y].wall = mazeMap[x][y].wall |N;
     
@@ -265,7 +265,206 @@ void FloodAlgorithm::mapMaze
   n_stack_size = 0;
 }
 /*Public***********************************************************************/
+/*movement - return an int value to tell bot which way to move
+  0  -> forward
+  1  -> left
+  2  -> right
+  3  -> turnaround
+  -1 -> error
+*/
 int FloodAlgorithm::movement(int x, int y, int dir, int readData[])
 {
-    return 0;
+    if (x == MAP_SIZE/2-1 && y == MAP_SIZE/2-1 ||
+        x == MAP_SIZE/2-1 && y == MAP_SIZE/2 ||
+        x == MAP_SIZE/2 && y == MAP_SIZE/2-1 ||
+        x == MAP_SIZE/2 && y == MAP_SIZE/2 )
+    {
+        center = true;
+    }else {center = false;}
+    mapMaze(readData,dir,x,y,center);
+    /********/
+    if (readData[0] > WALL && readData[5] > WALL){ //(CAN CHANGE)
+      return 3;
+    }
+    Node values[4];
+    //up
+    if(coordCheck(x-1))
+    {
+      values[0].x = x-1;
+      values[0].y = y;
+      values[0].dist = mazeMap[x-1][y].dist;
+    }else{
+      values[0].x = 0;
+      values[0].y = 0;
+      values[0].dist = 256;
+    }
+    //down
+    if(coordCheck(x+1))
+    {
+      values[1].x = x+1;
+      values[1].y = y;
+      values[1].dist = mazeMap[x+1][y].dist;
+    }else{
+      values[1].x = 0;
+      values[1].y = 0;
+      values[1].dist = 256;
+    }
+    //left
+    if(coordCheck(y-1))
+    {
+      values[2].x = x;
+      values[2].y = y-1;
+      values[2].dist = mazeMap[x][y-1].dist;
+    }else{
+      values[2].x = 0;
+      values[2].y = 0;
+      values[2].dist = 256;
+    }
+    //rt
+    if(coordCheck(y+1))
+    {
+      values[3].x = x;
+      values[3].y = y+1;
+      values[3].dist = mazeMap[x][y+1].dist;
+    }else{
+      values[3].x = 0;
+      values[3].y = 0;
+      values[3].dist = 256;
+    }
+
+    for (int outer = 1; outer < DIR_SIZE ; outer++)
+    {
+      int position = outer;
+      Node key = values[position];
+
+      // Shift larger values to the right
+      while (position > 0 && values[position - 1].dist>key.dist)
+      {
+        values[position] = values[position - 1];
+        position--;
+      }
+      values[position] =  key;
+    }
+/*
+    for(int i=0; i<DIR_SIZE;i++)
+    {
+      if(dir[pos]== 'N')
+      {
+        if(coordCheck(cX-1) && readData[2] < wallDist && values[i].x == cX-1 && values[i].y == cY){     //up
+          move(1,11);
+          updateLocation();
+          delay(d);
+          //delay(3000);
+          break;
+        }
+        else if(coordCheck(cY+1) && readData[4] < wallDist && values[i].x == cX && values[i].y == cY+1){        //rt
+          turn(90);
+          updateDir(90);
+          updateLocation();
+          delay(d);
+          //delay(4000);
+          break;
+        }
+        else if(coordCheck(cY-1) && readData[0]< wallDist&& values[i].x == cX && values[i].y == cY-1){        //left
+          turn(-90);
+          updateDir(-90);
+          updateLocation();
+          delay(d);
+          //delay(4000);
+          break;
+        }
+      }
+      else if (dir[pos] == 'S'){
+        if(coordCheck(cX+1) && readData[2] < wallDist && values[i].x == cX+1 && values[i].y == cY){     //up
+          move(1,11);
+          updateLocation();
+          delay(d);
+          //delay(3000);
+          break;
+        }
+        else if(coordCheck(cY-1) && readData[4] < wallDist && values[i].x == cX && values[i].y == cY-1){        //rt
+          turn(90);
+          updateDir(90);
+          updateLocation();
+          delay(d);
+          //delay(4000);
+          break;
+        }
+        else if(coordCheck(cY+1) && readData[0] < wallDist && values[i].x == cX && values[i].y == cY+1){        //left
+          turn(-90);
+          updateDir(-90);
+          updateLocation();
+          delay(d);
+          //delay(4000);
+          break;
+        }
+      }
+      else if(dir[pos] == 'E'){
+        if(coordCheck(cY+1) && readData[2] < wallDist && values[i].x == cX && values[i].y == cY+1){     //up
+          move(1,11);
+          updateLocation();
+          delay(d);
+          //delay(3000);
+          break;
+        }
+        else if(coordCheck(cX+1) && readData[4] < wallDist && values[i].x == cX+1 && values[i].y == cY){        //rt
+          turn(90);
+          updateDir(90);
+          updateLocation();
+          delay(d);
+          //delay(4000);
+          break;
+        }
+        else if(coordCheck(cX-1) && readData[0]< wallDist && values[i].x == cX-1 && values[i].y == cY){        //left
+          turn(-90);
+          updateDir(-90);
+          updateLocation();
+          delay(d);
+          //delay(4000);
+          break;
+        }
+      }
+      else if (dir[pos] == 'W'){
+        if(coordCheck(cY-1) && readData[2] < wallDist && values[i].x == cX && values[i].y == cY-1){     //up
+          move(1,11);
+          updateLocation();
+          delay(d);
+          //delay(3000);
+          break;
+        }
+        else if(coordCheck(cX-1) && readData[4] < wallDist && values[i].x == cX-1 && values[i].y == cY){        //rt
+          turn(90);
+          updateDir(90);
+          updateLocation();
+          delay(d);
+          //delay(4000);
+          break;
+        }
+        else if(coordCheck(cX+1) && readData[0] < wallDist&& values[i].x == cX+1 && values[i].y == cY){        //left
+          turn(-90);
+          updateDir(-90);
+          updateLocation();
+          delay(d);
+          //delay(4000);
+          break;
+        }
+      }
+    }
+    delay(10);   
+    if(!center)
+    {
+      mapMaze(readData,pos,iX,iY,center);
+      if((cX==7 && cY==7) || (cX==7 && cY==8) || (cX==8 && cY==7) || (cX==8 && cY==8)){
+        center = !center;
+        delay(5000);
+      }
+    }
+    else{
+      mapMaze(readData,pos,iX,iY,center);
+      if(cX == iX && cY == iY){
+        center = !center;
+        delay(5000);
+      }
+    }*/
+    return -1;
 }
