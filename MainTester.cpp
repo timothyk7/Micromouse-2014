@@ -125,7 +125,7 @@ int main (int argc, char *argv[]) {
     prompt = TRUE; //should promt user
     int count = 0; //number of moves
     
-    map.initialize("maze4.txt");
+    map.initialize("maze5.txt");
     int dist [MAP_SIZE][MAP_SIZE]={0}; /*debug*/
     int wall [MAP_SIZE][MAP_SIZE]={0}; /*debug*/
 
@@ -161,6 +161,7 @@ int main (int argc, char *argv[]) {
               wall[mx][my] = flow.getWall(mx,my);
             }
         }
+        count++;
     }
     
     
