@@ -51,8 +51,16 @@ int FloodAlgorithm::size(bool next)
     return c_stack_size;
 }
 
+void FloodAlgorithm::copy()
+{
+  for(int x=0;x<STACK_CAP;x++)
+  {
+    c_stack[x] = n_stack[x];
+  }
+}
+
 /*FloodAlgorithm - Basic*/
-//private 
+/*Private**********************************************************************/
 bool FloodAlgorithm::coordCheck(int coord) {
   return ((coord >= 0) && (coord < MAP_SIZE));
 }
@@ -76,7 +84,7 @@ void FloodAlgorithm::clear() {
   }
 }
 
-//public
+/*Public***********************************************************************/
 /*MapWall - writes the wall configuration into the maze
   0 - no wall   1 - wall
 */
@@ -172,4 +180,88 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
         mazeMap[x][y-1].wall = mazeMap[x][y-1].wall |S;
     }
   }
+}
+
+/*MapMaze - maps the maze based on flood fill
+precondition: pos must be set the same way robot is facing
+              must start in corner
+              end of maze must be in center
+readData provided
+*/
+void FloodAlgorithm::mapMaze
+     (int readData[], int dir, int cX, int cY, bool center)
+{
+  //map the maze
+  //assert(size(true) == 0 && size(false) == 0);
+  mapWall(cX,cY,readData,dir);
+    
+  //flood the maze
+  int x = 0; // store node value
+  int y = 0;
+  int level = 0; //shortest dist
+  clearDist();
+
+  if (center) { //doesn't work
+    node = mazeMap[0][15];
+    push(false);
+  }
+  else {
+    node = mazeMap[MAP_SIZE/2-1][MAP_SIZE/2-1];
+    push(false);
+    node = mazeMap[MAP_SIZE/2-1][MAP_SIZE/2];
+    push(false);
+    node = mazeMap[MAP_SIZE/2][MAP_SIZE/2-1];
+    push(false);
+    node = mazeMap[MAP_SIZE/2][MAP_SIZE/2];
+    push(false);
+  }
+
+
+  do {
+    n_stack_size = 0;
+    n_stack = {};
+    
+    while (size(false) >0) {
+      pop(false);
+      
+      x = node.x;
+      y = node.y;
+            
+      if (mazeMap[x][y].dist ==257) {
+    
+        mazeMap[x][y].dist = level; //level manipulation 
+        //left
+        if (coordCheck(y-1) && !((mazeMap[x][y].wall & 0x0010)==0x0010) 
+            && mazeMap[x][y-1].dist == 257) {//check whether to push onto the stack
+          node = mazeMap[x][y-1];
+          push(true);
+        }
+        //right
+        if (coordCheck(y+1) && !((mazeMap[x][y].wall & 0x0001) == 0x0001) 
+            && mazeMap[x][y+1].dist == 257 ) {
+          node = mazeMap[x][y+1];
+          push(true);
+        }
+        //up
+        if (coordCheck(x-1) && !((mazeMap[x][y].wall & 0x0100) == 0x0100)
+            && mazeMap[x-1][y].dist == 257 ) {
+          node = mazeMap[x-1][y];
+          push(true);
+        }
+        //down
+        if (coordCheck(x+1) && !((mazeMap[x][y].wall & 0x1000) == 0x1000) 
+            && mazeMap[x+1][y].dist == 257 ) {
+          node = mazeMap[x+1][y];
+          push(true);
+        }
+        
+        
+      }
+    }
+     
+    level++;
+    copy();
+    c_stack_size = n_stack_size;
+  } while (size(true) > 0);
+  n_stack_size = 0;
 }

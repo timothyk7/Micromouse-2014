@@ -66,6 +66,7 @@ class FloodAlgorithm{
     void push (bool next);
     void pop (bool next);
     int size (bool next);
+    void copy();
 
 };
 
