@@ -83,7 +83,7 @@ void FloodAlgorithm::clear() {
     for(int my = 0; my < MAP_SIZE;my++) {
       mazeMap[mx][my].x = mx;
       mazeMap[mx][my].y = my;
-      mazeMap[mx][my].wall = 0;
+      mazeMap[mx][my].wall = 0x0;
       mazeMap[mx][my].dist = 257;
     }
   }
@@ -130,28 +130,28 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[DIR_SIZE], int pos)
    int S = 0x0; 
   //formalize the wall hex to keep the same orientation
   if(dir[pos] == N_DIR) {
-       E = 0x0001;
-       W = 0x0010;
-       N = 0x0100;
-       S = 0x1000;
+       E = 0x1; //0001;
+       W = 0x2; //0010;
+       N = 0x4; //0100;
+       S = 0x8; //1000;
   }
   else if (dir[pos] == E_DIR) {
-       E = 0x1000;
-       W = 0x0100;
-       N = 0x0001;
-       S = 0x0010;
+       E = 0x8; //1000;
+       W = 0x4; //0100;
+       N = 0x1; //0001;
+       S = 0x2; //0010;
    }
    else if (dir[pos] == S_DIR) {
-       E = 0x0010;
-       W = 0x0001;
-       N = 0x1000;
-       S = 0x0100;
+       E = 0x2; //0010;
+       W = 0x1; //0001;
+       N = 0x8; //1000;
+       S = 0x4; //0100;
    }
    else if (dir[pos] == W_DIR) {
-       E = 0x0100;
-       W = 0x1000;
-       N = 0x0010;
-       S = 0x0001;
+       E = 0x4; //0100;
+       W = 0x8; //1000;
+       N = 0x2; //0010;
+       S = 0x1; //0001;
    }
    else
        //assert(false);
@@ -262,25 +262,25 @@ void FloodAlgorithm::mapMaze
     
         mazeMap[x][y].dist = level; //level manipulation 
         //left
-        if (coordCheck(y-1) && !((mazeMap[x][y].wall & 0x0010)==0x0010) 
+        if (coordCheck(y-1) && !((mazeMap[x][y].wall & 0x2)==0x2) //0010
             && mazeMap[x][y-1].dist == 257) {//check whether to push onto the stack
           node = mazeMap[x][y-1];
           push(true);
         }
         //right
-        if (coordCheck(y+1) && !((mazeMap[x][y].wall & 0x0001) == 0x0001) 
+        if (coordCheck(y+1) && !((mazeMap[x][y].wall & 0x1) == 0x1) //0001
             && mazeMap[x][y+1].dist == 257 ) {
           node = mazeMap[x][y+1];
           push(true);
         }
         //up
-        if (coordCheck(x-1) && !((mazeMap[x][y].wall & 0x0100) == 0x0100)
+        if (coordCheck(x-1) && !((mazeMap[x][y].wall & 0x4) == 0x4) //0100
             && mazeMap[x-1][y].dist == 257 ) {
           node = mazeMap[x-1][y];
           push(true);
         }
         //down
-        if (coordCheck(x+1) && !((mazeMap[x][y].wall & 0x1000) == 0x1000) 
+        if (coordCheck(x+1) && !((mazeMap[x][y].wall & 0x8) == 0x8) //1000
             && mazeMap[x+1][y].dist == 257 ) {
           node = mazeMap[x+1][y];
           push(true);

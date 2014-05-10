@@ -118,7 +118,7 @@ void MapMaker::displayMaze(int num, int number[MAX_SIZE][MAX_SIZE], int cX, int 
                 if(((mazeMap[row][col].wall>>3)&0x0001) == 0x0001)//if theres a bottom wall
                     (void)printf("_%c%c_",dir,dir);
                 else
-                    (void)printf("_%c%c_",dir,dir);
+                    (void)printf(" %c%c ",dir,dir);
               }else if(num){
                 if(((mazeMap[row][col].wall>>3)&0x0001) == 0x0001){//if theres a bottom wall
                     if(number[row][col]<10)
@@ -190,7 +190,7 @@ void MapMaker::displayBotMaze(int num, int number[MAX_SIZE][MAX_SIZE], int map[M
                 if(((map[row][col]>>3)&0x0001) == 0x0001)//if theres a bottom wall
                     (void)printf("_%c%c_",dir,dir);
                 else
-                    (void)printf("_%c%c_",dir,dir);
+                    (void)printf(" %c%c ",dir,dir);
               }else if(num){
                 if(((map[row][col]>>3)&0x0001) == 0x0001){//if theres a bottom wall
                     if(number[row][col]<10)
