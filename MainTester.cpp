@@ -2,9 +2,14 @@
  @author Timothy Kua
 */
 
-//include header in maple...
-#include "MapMaker.cpp" //not included in maple
+//not included in maple
+#include <iostream>
+#include <string>
+#include "MapMaker.cpp" 
+//include header in maple
 #include "FloodAlgorithm.cpp"
+
+using namespace std;
 
 /*In main Micromouse files*/
 //Starting point
@@ -116,21 +121,21 @@ int main (int argc, char *argv[]) {
     FloodAlgorithm flow;
     MapMaker map;
     
-    char buff[BUFSIZ]={0}; //store commands
+    //char buff[BUFSIZ]={0}; //store commands
     
     //used to store if the program should read from file or the user
     FILE *pFile;
     pFile = stdin; //initialize to stdin
     int prompt; //if should prompt the user or not
     prompt = TRUE; //should promt user
-    int count = 0; //number of moves
+    int count = -1; //number of moves
     
     map.initialize("maze5.txt");
     int dist [MAP_SIZE][MAP_SIZE]={0}; /*debug*/
     int wall [MAP_SIZE][MAP_SIZE]={0}; /*debug*/
 
-    /* // Done to speed simulator*/
-    for(int x =0; x<200; x++)
+    /* // Done to speed simulator
+    for(int x =0; x<100; x++)
     {
        sensor(map);
        switch (flow.movement(cX,cY,pos,readData))
@@ -146,6 +151,8 @@ int main (int argc, char *argv[]) {
               break;
               case 3:
                    turn(180);
+              break;
+              case 4:
               break;
               default:
                  printf("ERROR\n");
@@ -163,20 +170,32 @@ int main (int argc, char *argv[]) {
         }
         count++;
     }
+    */
     
-    
-    char *str;
-    for(DISPLAY_PROMPT; fgets(buff,BUFSIZ, pFile) !=NULL;DISPLAY_PROMPT)
+    string str;
+    do
     {
-       str = strtok(buff, TOKEN_SEP);
-       if(strcmp(str, "exit") == 0)
-          break;    
-       printf("Should be at %d,%d facing %c with count %d\n", cX , cY , dir[pos], count);
+       cout<<">";
+       getline(cin, str);  
+       if(str.compare("quit") == 0)
+          break;   
+       sensor(map);
+       int movement = flow.movement(cX,cY,pos,readData);
+       for(int mx= 0; mx < MAP_SIZE;mx++) {
+            for(int my = 0; my < MAP_SIZE;my++) {
+              dist[mx][my] = flow.getDist(mx,my);
+            }
+        }
+        for(int mx= 0; mx < MAP_SIZE;mx++) {
+            for(int my = 0; my < MAP_SIZE;my++) {
+              wall[mx][my] = flow.getWall(mx,my);
+            }
+        }
+       printf("\nShould be at %d,%d facing %c with count %d\n", cX , cY , dir[pos], count);
        map.displayMaze(TRUE,dist ,cX,cY,dir[pos]);
        map.displayBotMaze(TRUE,dist, wall,cX,cY,dir[pos]);
-       printf("\n");  
-       sensor(map);
-       switch (flow.movement(cX,cY,pos,readData))
+       printf("\n");
+       switch (movement)
        {
               case 0:
                    forward();
@@ -190,22 +209,14 @@ int main (int argc, char *argv[]) {
               case 3:
                    turn(180);
               break;
+              case 4:
+              break;
               default:
                  printf("ERROR\n");
                  return -1;
        }
-        for(int mx= 0; mx < MAP_SIZE;mx++) {
-            for(int my = 0; my < MAP_SIZE;my++) {
-              dist[mx][my] = flow.getDist(mx,my);
-            }
-        }
-        for(int mx= 0; mx < MAP_SIZE;mx++) {
-            for(int my = 0; my < MAP_SIZE;my++) {
-              wall[mx][my] = flow.getWall(mx,my);
-            }
-        }
        count++;
-    }
+    }while(true);
     return 0;
 }
 

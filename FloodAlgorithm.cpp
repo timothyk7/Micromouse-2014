@@ -232,7 +232,7 @@ void FloodAlgorithm::mapMaze
   clearDist();
 
   if (center) { //doesn't work
-    node = mazeMap[0][15];
+    node = mazeMap[MAP_SIZE-1][0];
     push(false);
   }
   else {
@@ -300,6 +300,7 @@ void FloodAlgorithm::mapMaze
   1  -> left
   2  -> right
   3  -> turnaround
+  4  -> at goal
   -1 -> error
 */
 int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
@@ -373,6 +374,19 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
       values[position] =  key;
     }
 /**********************/
+    //check which part of algorithm to run  
+    if(!center)
+    {
+      if((x==7 && y==7) || (x==7 && y==8) || (x==8 && y==7) || (x==8 && y==8)){
+        center = !center;
+      }
+    }
+    else{
+      if(x == MAP_SIZE-1 && y == 0){
+        center = !center;
+      }
+    }
+
     //tell where bot to go
     char dir[] = {DIR}; //create dir array
     for(int i=0; i<DIR_SIZE;i++)
@@ -436,19 +450,5 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
       }
     }
     
-    //check which part of algorithm to run  
-    if(!center)
-    {
-      mapMaze(readData,pos,x,y,center);
-      if((x==7 && y==7) || (x==7 && y==8) || (x==8 && y==7) || (x==8 && y==8)){
-        center = !center;
-      }
-    }
-    else{
-      mapMaze(readData,pos,x,y,center);
-      if(x == 0 && y == 15){
-        center = !center;
-      }
-    }
     return -1;
 }
