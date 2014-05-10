@@ -95,7 +95,7 @@ void FloodAlgorithm::clear() {
    return true if wall there
    return false if no wall nearby
 */
-bool FloodAlgorithm::isWall(int readData[DIR_SIZE], int type)
+bool FloodAlgorithm::isWall(int readData[], int type)
 {
      switch (type)
      {
@@ -120,7 +120,7 @@ bool FloodAlgorithm::isWall(int readData[DIR_SIZE], int type)
 /*MapWall - writes the wall configuration into the maze
   0 - no wall   1 - wall
 */
-void FloodAlgorithm::mapWall(int x, int y, int readData[DIR_SIZE], int pos)
+void FloodAlgorithm::mapWall(int x, int y, int readData[], int pos)
 {
    char dir[] = {DIR}; //create dir array
    //wall location
@@ -153,11 +153,9 @@ void FloodAlgorithm::mapWall(int x, int y, int readData[DIR_SIZE], int pos)
        N = 0x2; //0010;
        S = 0x1; //0001;
    }
-   else
+   else{}
        //assert(false);
-    
   if (isWall(readData, 1)) { //check if wall on left
-  
     mazeMap[x][y].wall = mazeMap[x][y].wall |W;
     
     //putting up wall on the other side

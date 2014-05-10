@@ -79,6 +79,7 @@ void sensor(MapMaker map)
         oF=0x2; //0010
     }
 
+    //printf("%d, %d= %x\n", cX,cY,map.getMapInfo(cX,cY).wall);
     if((map.getMapInfo(cX,cY).wall&oL) == oL) //left
     {
         readData[1] = 1200;
@@ -89,6 +90,7 @@ void sensor(MapMaker map)
         readData[1] = 400;
         readData[2] = 400;
     }
+    
     if((map.getMapInfo(cX,cY).wall&oR) == oR) //right
     {
         readData[3] = 1200;
@@ -99,6 +101,7 @@ void sensor(MapMaker map)
         readData[3] = 400;
         readData[4] = 400;
     }
+    
     if((map.getMapInfo(cX,cY).wall&oF) == oF){ //front
         readData[0] = 1200;
         readData[5] = 1200;
