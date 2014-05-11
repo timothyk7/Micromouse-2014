@@ -303,7 +303,7 @@ void FloodAlgorithm::mapMaze
   4  -> at goal
   -1 -> error
 */
-int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
+int FloodAlgorithm::movementMap(int x, int y, int pos, int readData[])
 {
     mapMaze(readData,pos,x,y,center);
     
@@ -480,4 +480,22 @@ int FloodAlgorithm::movement(int x, int y, int pos, int readData[])
     }
     
     return -1;
+}
+
+/*movement short - return an int array to tell bot how to quickly traverse the maze
+  precondition - bot is at starting location
+               - bot has mapped the maze at least once (including coming back)
+  
+  0  -> forward
+  1  -> left
+  2  -> right
+  3  -> turnaround
+  4  -> at goal (brake)
+*/
+void FloodAlgorithm::movementShort(int x, int y, int pos, int readData[], int*movement)
+{
+    mapWall(x,y,readData,pos); //get floodfill numbers
+    int temp [256] = {-1}; //initialiaze return array to -1 or stop
+    temp[0] = 0;
+    movement = temp;
 }

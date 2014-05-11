@@ -134,12 +134,24 @@ int main (int argc, char *argv[]) {
     int dist [MAP_SIZE][MAP_SIZE]={0}; /*debug*/
     int wall [MAP_SIZE][MAP_SIZE]={0}; /*debug*/
 
-    /* // Done to speed simulator
-    for(int x =0; x<100; x++)
+    /* // Done to speed simulator*/
+    //363 - finish maze5
+    for(int x =0; x<363; x++)
     {
        sensor(map);
-       switch (flow.movement(cX,cY,pos,readData))
-       {
+       int movement = flow.movementMap(cX,cY,pos,readData);
+       for(int mx= 0; mx < MAP_SIZE;mx++) {
+            for(int my = 0; my < MAP_SIZE;my++) {
+              dist[mx][my] = flow.getDist(mx,my);
+            }
+        }
+        for(int mx= 0; mx < MAP_SIZE;mx++) {
+            for(int my = 0; my < MAP_SIZE;my++) {
+              wall[mx][my] = flow.getWall(mx,my);
+            }
+        }
+        switch (movement)
+        {
               case 0:
                    forward();
               break;
@@ -158,19 +170,9 @@ int main (int argc, char *argv[]) {
                  printf("ERROR\n");
                  return -1;
        }
-        for(int mx= 0; mx < MAP_SIZE;mx++) {
-            for(int my = 0; my < MAP_SIZE;my++) {
-              dist[mx][my] = flow.getDist(mx,my);
-            }
-        }
-        for(int mx= 0; mx < MAP_SIZE;mx++) {
-            for(int my = 0; my < MAP_SIZE;my++) {
-              wall[mx][my] = flow.getWall(mx,my);
-            }
-        }
         count++;
     }
-    */
+    
     
     string str;
     do
@@ -180,7 +182,14 @@ int main (int argc, char *argv[]) {
        if(str.compare("quit") == 0)
           break;   
        sensor(map);
-       int movement = flow.movement(cX,cY,pos,readData);
+       //test
+       int moveShort[256];
+       flow.movementShort(cX,cY,pos,readData,moveShort);
+       cout<<moveShort[0]<<endl;
+       
+       
+        
+       int movement = flow.movementMap(cX,cY,pos,readData);
        for(int mx= 0; mx < MAP_SIZE;mx++) {
             for(int my = 0; my < MAP_SIZE;my++) {
               dist[mx][my] = flow.getDist(mx,my);

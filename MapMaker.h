@@ -1,3 +1,6 @@
+/*
+ @author Timothy Kua
+*/
 #ifndef MAPMAKER_H
 #define MAPMAKER_H
 

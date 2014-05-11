@@ -50,7 +50,8 @@ class FloodAlgorithm{
   }
     
   //methods for movement
-    int movement(int x, int y, int dir, int readData[]);
+    int movementMap(int x, int y, int dir, int readData[]);
+    void movementShort(int x, int y, int dir, int readData[], int* movement);
     int getDist(int x, int y); //DEBUGGING
     int getWall(int x, int y); //DEBUGGING
     
